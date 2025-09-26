@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>测试平台2025 - 首页</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet"/>
+    <link href="{% static 'css/styles.css' %} " rel="stylesheet"/>
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="sb-nav-fixed">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <!-- Navbar Brand-->
+    <h1 class="navbar-brand ps-3" href="">Test Platform 2025</h1>
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+            class="fas fa-bars"></i></button>
+    <!-- Navbar Search-->
+    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+        <div class="input-group">
+            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
+                   aria-describedby="btnNavbarSearch"/>
+            <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+        </div>
+    </form>
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#!">Settings</a></li>
+                <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                <li>
+                    <hr class="dropdown-divider"/>
+                </li>
+                <li><a class="dropdown-item" href="#!">Logout</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">设备管理</div>
+                    <a class="nav-link" href="{% url 'device_management' %}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        设备列表
+                    </a>
+                    <div class="sb-sidenav-menu-heading">自动化相关</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"
+                       aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        UI自动化
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{% url 'element_management' %}">产品页面管理</a>
+                            <a class="nav-link" href="{% url 'element_info_list' %}">页面元素管理</a>
+                            <a class="nav-link" href="{% url 'test_case_list' %}">测试用例管理</a>
+                            <a class="nav-link" href="{% url 'case_debug_implement' %}">用例调试与执行</a>
+                            <a class="nav-link" href="{% url 'execution_case_record' %}">用例执行记录</a>
+                        </nav>
+                    </div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
+                       aria-expanded="false" aria-controls="collapsePages">
+                        <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                        Pages
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#pagesCollapseAuth" aria-expanded="false"
+                               aria-controls="pagesCollapseAuth">
+                                Authentication
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne"
+                                 data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="login.html">Login</a>
+                                    <a class="nav-link" href="register.html">Register</a>
+                                    <a class="nav-link" href="password.html">Forgot Password</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#pagesCollapseError" aria-expanded="false"
+                               aria-controls="pagesCollapseError">
+                                Error
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne"
+                                 data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="401.html">401 Page</a>
+                                    <a class="nav-link" href="404.html">404 Page</a>
+                                    <a class="nav-link" href="500.html">500 Page</a>
+                                </nav>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="sb-sidenav-menu-heading">Addons</div>
+                    <a class="nav-link" href="charts.html">
+                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                        Charts
+                    </a>
+                    <a class="nav-link" href="tables.html">
+                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                        Tables
+                    </a>
+                </div>
+            </div>
+            <div class="sb-sidenav-footer">
+                <div class="small">Logged in as:</div>
+                Start Bootstrap
+            </div>
+        </nav>
+    </div>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container mt-4">
+                <h1>用例调试与执行</h1>
+
+                <!-- 筛选部分 -->
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label class="form-label">项目名称</label>
+                        <select class="form-select" id="filterProduct">
+                            <option value="">请选择项目名称</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">页面</label>
+                        <select class="form-select" id="filterModel" disabled>
+                            <option value="">请选择页面</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">用例名称</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="searchCase" placeholder="请输入用例名称">
+                            <button class="btn btn-primary" id="searchBtn">搜索</button>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <button class="btn btn-secondary d-block" id="resetFilter">重置筛选</button>
+                    </div>
+                </div>
+
+                <!-- 设备选择和提交按钮 -->
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label class="form-label">选择设备</label>
+                        <select class="form-select" id="executionDeviceSelect">
+                            <option value="">选择设备</option>
+                            {% for device in devices %}
+                                <option value="{{ device.unique_id }}" data-type="{{ device.device_type }}"
+                                        data-version="{{ device.version }}">{{ device.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <button class="btn btn-success d-block" id="submitExecution">提交执行</button>
+                    </div>
+                </div>
+
+                <!-- 表格部分 -->
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th><input type="checkbox" id="selectAll"></th> <!-- 全选复选框 -->
+                        <th>用例名称</th>
+                        <th>项目名称</th>
+                        <th>页面</th>
+                        <th>用例内容</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="caseTableBody">
+                    <!-- 数据将通过 JavaScript 动态加载 -->
+                    </tbody>
+                </table>
+
+                <!-- 分页控件 -->
+                <div class="row">
+                    <div class="col-12">
+                        <nav aria-label="Page navigation">
+                            <ul class="pagination justify-content-center" id="pagination">
+                                <!-- 分页链接将通过 JavaScript 动态生成 -->
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+$(document).ready(function () {
+    // 当前页码，默认为1
+    let currentPage = 1;
+    let totalPages = 1;
+
+    // 初始化产品下拉框
+    $.get("/element_management/check_case_list/", function (data) {
+        $("#filterProduct").empty().append('<option value="">请选择项目名称</option>');
+        data.products.forEach(p => {
+            $("#filterProduct").append(`<option value="${p.product_name}">${p.product_name}</option>`);
+        });
+    });
+
+    // 监听产品选择变化
+    $("#filterProduct").change(function () {
+        const product = $(this).val();
+        $("#filterModel").prop("disabled", true).empty().append('<option value="">请选择页面</option>');
+        currentPage = 1; // 重置为第一页
+
+        if (product) {
+            $.get("/element_management/check_case_list/", {
+                product_name: product
+            }, function (data) {
+                $("#filterModel").empty().append('<option value="">请选择页面</option>');
+                // 添加"全部"选项
+                $("#filterModel").append('<option value="全部">全部</option>');
+
+                if (data.models && data.models.length > 0) {
+                    data.models.forEach(model => {
+                        $("#filterModel").append(`<option value="${model.model}">${model.model}</option>`);
+                    });
+                    $("#filterModel").prop("disabled", false);
+                }
+            });
+        }
+    });
+
+    // 监听页面选择变化，加载表格数据
+    $("#filterModel").change(function () {
+        currentPage = 1; // 重置为第一页
+        loadTableData();
+    });
+
+    // 加载表格数据的函数
+    function loadTableData(page = 1) {
+        const product = $("#filterProduct").val();
+        const model = $("#filterModel").val();
+
+        if (product && (model === "全部" || model)) {
+            $.get("/element_management/check_case_list/", {
+                product_name: product,
+                model: model,
+                page_number: page
+            }, function (data) {
+                console.log("后端返回的数据：", data);
+                $("#caseTableBody").empty();
+
+                // 更新总页数和当前页码
+                totalPages = data.total_pages;
+                currentPage = page;
+
+                if (data.products && data.products.length > 0) {
+                    data.products.forEach(item => {
+                        // 添加设备选择下拉框和调试按钮
+                        $("#caseTableBody").append(`
+                            <tr>
+                                <td><input type="checkbox" class="caseCheckbox" data-id="${item.id}"></td>
+                                <td>${item.case_name}</td>
+                                <td>${item.product_name}</td>
+                                <td>${item.model}</td>
+                                <td class="case-content">${item.element_details || ''}</td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <select class="form-select deviceSelect me-2">
+                                            <option value="">选择设备</option>
+                                            {% for device in devices %}
+                                                <option value="{{ device.unique_id }}" data-type="{{ device.device_type }}"
+                                                        data-version="{{ device.version }}">{{ device.name }}</option>
+                                            {% endfor %}
+                                        </select>
+                                        <button class="btn btn-primary btn-sm debugBtn"
+                                            data-id="${item.id}"
+                                            data-elements='${item.elements_list}'>调试</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                    // 更新分页控件
+                    updatePagination();
+                } else {
+                    $("#caseTableBody").append(`
+                        <tr>
+                            <td colspan="6" class="text-center">未找到匹配的测试用例</td>
+                        </tr>
+                    `);
+                    // 清空分页控件
+                    $("#pagination").empty();
+                }
+            });
+        }
+    }
+
+    // 更新分页控件
+    function updatePagination() {
+        const pagination = $("#pagination");
+        pagination.empty();
+
+        // 如果总页数小于等于1，不显示分页
+        if (totalPages <= 1) {
+            return;
+        }
+
+        // 添加"上一页"按钮
+        pagination.append(`
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${currentPage - 1}" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+        `);
+
+        // 确定显示哪些页码
+        let startPage = Math.max(1, currentPage - 2);
+        let endPage = Math.min(totalPages, startPage + 4);
+
+        // 调整startPage，确保最多显示5个页码
+        if (endPage - startPage < 4) {
+            startPage = Math.max(1, endPage - 4);
+        }
+
+        // 添加页码按钮
+        for (let i = startPage; i <= endPage; i++) {
+            pagination.append(`
+                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                    <a class="page-link" href="#" data-page="${i}">${i}</a>
+                </li>
+            `);
+        }
+
+        // 添加"下一页"按钮
+        pagination.append(`
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${currentPage + 1}" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        `);
+
+        // 添加页码点击事件
+        $(".page-link").click(function(e) {
+            e.preventDefault();
+            const page = parseInt($(this).data("page"));
+
+            // 如果是禁用的按钮或当前页，不执行操作
+            if ($(this).parent().hasClass("disabled") || page === currentPage) {
+                return;
+            }
+
+            console.log("点击了分页按钮，页码:", page);
+
+            // 根据当前模式选择加载方式
+            if (isInSearchMode && currentSearchKeyword) {
+                searchCases(currentSearchKeyword, page);
+            } else {
+                loadTableData(page);
+            }
+        });
+    }
+
+    // 保存当前的搜索关键词
+    let currentSearchKeyword = "";
+    let isInSearchMode = false;
+
+    // 添加搜索按钮的点击事件
+    $("#searchBtn").click(function () {
+        const searchKeyword = $("#searchCase").val().trim();
+        if (searchKeyword) {
+            currentSearchKeyword = searchKeyword;
+            isInSearchMode = true;
+            searchCases(searchKeyword, 1); // 搜索时总是从第一页开始
+        } else {
+            // 如果搜索框为空，恢复显示筛选结果
+            currentSearchKeyword = "";
+            isInSearchMode = false;
+            currentPage = 1; // 重置为第一页
+            loadTableData();
+        }
+    });
+
+    // 添加搜索框的回车事件
+    $("#searchCase").keypress(function (e) {
+        if (e.which === 13) {  // 回车键的 keyCode 是 13
+            $("#searchBtn").click();
+        }
+    });
+
+    // 搜索功能实现，并增加分页支持
+    function searchCases(keyword, page = 1) {
+        console.log(`正在搜索"${keyword}"，第${page}页`);
+
+        $.get("/element_management/search_case/", {
+            search_keyword: keyword,
+            page_number: page
+        }, function (response) {
+            console.log("搜索返回数据:", response);
+            $("#caseTableBody").empty();
+
+            // 更新总页数和当前页码
+            if (response.total_pages) {
+                totalPages = response.total_pages;
+                currentPage = page;
+            } else {
+                totalPages = 1;
+                currentPage = 1;
+            }
+
+            if (response.products && response.products.length > 0) {
+                response.products.forEach(item => {
+                    $("#caseTableBody").append(`
+                        <tr>
+                            <td><input type="checkbox" class="caseCheckbox" data-id="${item.id}"></td>
+                            <td>${item.case_name}</td>
+                            <td>${item.product_name}</td>
+                            <td>${item.model}</td>
+                            <td class="case-content">${item.element_details || ''}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <select class="form-select deviceSelect me-2">
+                                        <option value="">选择设备</option>
+                                        {% for device in devices %}
+                                            <option value="{{ device.unique_id }}" data-type="{{ device.device_type }}"
+                                                data-version="{{ device.version }}">{{ device.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button class="btn btn-primary btn-sm debugBtn"
+                                        data-id="${item.id}"
+                                        data-elements='${item.elements_list}'>调试</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
+                });
+                // 更新分页控件
+                updatePagination();
+            } else {
+                $("#caseTableBody").append(`
+                    <tr>
+                        <td colspan="6" class="text-center">未找到匹配的测试用例</td>
+                    </tr>
+                `);
+                // 清空分页控件
+                $("#pagination").empty();
+            }
+        }).fail(function () {
+            alert("搜索请求失败，请检查网络连接");
+        });
+    }
+
+    // 重置筛选按钮，同时清空搜索框
+    $("#resetFilter").click(function () {
+        $("#filterProduct").val("");
+        $("#filterModel").val("").prop("disabled", true);
+        $("#searchCase").val("");  // 清空搜索框
+        $("#caseTableBody").empty();
+        $("#pagination").empty();   // 清空分页控件
+        currentPage = 1;            // 重置当前页为1
+        totalPages = 1;             // 重置总页数为1
+        currentSearchKeyword = "";  // 清空搜索关键词
+        isInSearchMode = false;     // 退出搜索模式
+    });
+
+    // 全选/全不选功能
+    $("#selectAll").click(function () {
+        $(".caseCheckbox").prop('checked', this.checked);
+    });
+
+    // 提交执行按钮点击事件
+    $("#submitExecution").click(function () {
+        const selectedDevice = $("#executionDeviceSelect").val();
+        const deviceType = $("#executionDeviceSelect").find("option:selected").data("type");
+        const deviceVersion = $("#executionDeviceSelect").find("option:selected").data("version");
+
+        if (!selectedDevice) {
+            alert("请选择设备");
+            return;
+        }
+
+        // 获取所有选中的用例ID
+        const selectedCaseIds = [];
+        $(".caseCheckbox:checked").each(function () {
+            const caseId = $(this).data("id");
+            selectedCaseIds.push(caseId);
+        });
+
+        if (selectedCaseIds.length === 0) {
+            alert("请选择至少一个用例");
+            return;
+        }
+
+        // 发送请求
+        $.ajax({
+            url: "/element_management/execution_case/",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                case_ids: selectedCaseIds,  // 只传递用例ID列表
+                unique_id: selectedDevice,
+                device_type: deviceType,
+                device_version: deviceVersion,
+                product_name: $("#filterProduct").val()
+            }),
+            success: function (response) {
+                if (response.status === "success") {
+                    alert("执行成功");
+                } else {
+                    alert("执行失败: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("执行请求失败: " + error);
+            }
+        });
+    });
+
+    // 调试按钮点击事件
+    $(document).on("click", ".debugBtn", function () {
+        const deviceSelect = $(this).closest("tr").find(".deviceSelect");
+        const unique_id = deviceSelect.val();
+        const device_type = deviceSelect.find("option:selected").data("type");
+        const device_version = deviceSelect.find("option:selected").data("version");
+
+        // 获取 product_name
+        const product_name = $(this).closest("tr").find("td:nth-child(3)").text().trim();
+
+        // 获取 elements_list 并处理
+        let elements_list_str = $(this).data("elements");
+        console.log("原始 elements_list 数据:", elements_list_str);
+
+        // 处理 elements_list 数据
+        let elements_list;
+        try {
+            // 如果已经是数组则直接使用
+            if (Array.isArray(elements_list_str)) {
+                elements_list = elements_list_str;
+            }
+            // 如果是字符串则尝试解析
+            else if (typeof elements_list_str === 'string') {
+                elements_list = JSON.parse(elements_list_str.trim());
+            }
+            // 如果都不是，抛出错误
+            else {
+                throw new Error("无效的数据类型");
+            }
+        } catch (error) {
+            console.error("处理 elements_list 失败:", error);
+            alert("解析用例数据失败，请检查数据格式");
+            return;
+        }
+
+        if (!unique_id) {
+            alert("请选择设备");
+            return;
+        }
+
+        // 发送调试请求
+        $.ajax({
+            url: "/element_management/debug_case/",
+            method: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({
+                elements_list: elements_list,
+                unique_id: unique_id,
+                device_type: device_type,
+                device_version: device_version,
+                product_name: product_name
+            }),
+            success: function (response) {
+                if (response.status === "success") {
+                    alert("调试成功");
+                } else {
+                    alert("调试失败: " + response.message);
+                }
+            },
+            error: function (xhr, status, error) {
+                alert("调试请求失败: " + error);
+            }
+        });
+    });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="/static/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="/static/assets/demo/chart-area-demo.js"></script>
+<script src="/static/assets/demo/chart-bar-demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+        crossorigin="anonymous"></script>
+<script src="/static/js/datatables-simple-demo.js"></script>
+
+</body>
+</html>

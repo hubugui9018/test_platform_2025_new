@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Video Stream</title>
+    <style>
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .controls {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        #startBtn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #stopBtn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        #modeSwitch {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        #videoCanvas {
+            width: 360px;
+            height: 800px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            background-color: #fff;
+        }
+
+        .status {
+            margin-top: 10px;
+            color: #666;
+        }
+
+        .mode-indicator {
+            padding: 5px 10px;
+            border-radius: 4px;
+            background-color: #eee;
+            margin-left: 10px;
+        }
+
+        .dom-tree-container {
+            position: fixed;
+            top: 100px;
+            right: 20px;
+            width: 300px;
+            max-height: 90%;
+            overflow-y: auto;
+            background-color: #f1f1f1;
+            padding: 15px;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #domTree {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: monospace;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .content {
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+        }
+
+        #element-info-container {
+            width: 300px;
+            max-height: 800px;
+            overflow-y: auto;
+            background-color: #f1f1f1;
+            padding: 15px;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 14px;
+            color: #333;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        select.form-control {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* 让内容区域（产品选择 + 投屏画布）并列 */
+        .main-content {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        /* 左侧：产品选择区域 */
+        .product-selection {
+            width: 250px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 右侧：投屏画布区域 */
+        .content {
+            display: flex;
+            gap: 20px;
+            flex-grow: 1;
+        }
+
+        /* 投屏画布 */
+        #videoCanvas {
+            width: 360px;
+            height: 800px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+            background-color: #fff;
+        }
+
+        /* DOM 树展示 */
+        .dom-tree-container {
+            width: 300px;
+            max-height: 800px;
+            overflow-y: auto;
+            background-color: #f1f1f1;
+            padding: 15px;
+            border: 1px solid #ddd;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1 id="pageTitle">Android Device Stream</h1>
+    <div class="controls">
+        <button id="startBtn" class="button">Start Streaming</button>
+        <button id="stopBtn" class="button">Stop Streaming</button>
+        <button id="modeSwitch" class="button">切换成DOM</button>
+        <button id="autoStoreBtn" class="button">开始存储Case</button>
+        <span class="mode-indicator" id="modeIndicator"></span>
+    </div>
+    <div>
+
+
+    </div>
+    <!-- 主内容区域，左右并列布局 -->
+    <div class="main-content">
+        <!-- 左侧：产品选择区域 -->
+        <div class="product-selection">
+            <h3>选择产品名称</h3>
+            <select id="productNameSelect" class="form-control">
+                <option value="">请选择产品名称</option>
+            </select>
+
+            <h3>选择模块</h3>
+            <select id="modelSelect" class="form-control" disabled>
+                <option value="">请先选择产品名称</option>
+            </select>
+
+            <h3>选择功能</h3>
+            <select id="functionSelect" class="form-control" disabled>
+                <option value="">请先选择型号</option>
+            </select>
+
+            <div class="form-group mt-3">
+                <h3>选择操作方式</h3>
+                <select id="operationTypeSelect" class="form-control">
+                    <option value="">请选择操作方式</option>
+                    <option value="click">点击</option>
+                    <option value="click_after_swiping">滑动后点击</option>
+                    <option value="swipe">滑动</option>
+                    <option value="from_bottom_to_top_swipe">由下而上滑动</option>
+                    <option value="long_press">长按</option>
+                    <option value="enter_text">输入文本</option>
+                </select>
+            </div>
+
+            <!-- 长按操作的持续时间输入框 -->
+            <div id="longPressFields" class="form-group mt-3" style="display: none;">
+                <label for="duration">持续时间 (毫秒)</label>
+                <input type="number" class="form-control" id="duration" value="1000" min="0">
+            </div>
+
+            <!-- 滑动操作的坐标和持续时间输入框 -->
+            <div id="swipeFields" class="form-group mt-3" style="display: none;">
+                <div class="row">
+                    <div class="col-md-6">
+                        <label for="startX">起始X坐标</label>
+                        <input type="number" class="form-control" id="startX" step="0.01">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="startY">起始Y坐标</label>
+                        <input type="number" class="form-control" id="startY" step="0.01">
+                    </div>
+                </div>
+                <div class="row mt-2">
+                    <div class="col-md-6">
+                        <label for="endX">结束X坐标</label>
+                        <input type="number" class="form-control" id="endX" step="0.01">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="endY">结束Y坐标</label>
+                        <input type="number" class="form-control" id="endY" step="0.01">
+                    </div>
+                </div>
+
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <label for="swipeDuration">滑动持续时间 (毫秒)</label>
+                        <input type="number" class="form-control" id="swipeDuration" value="1000" min="0">
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 由下而上滑动的默认值显示 -->
+            <div id="bottomToTopFields" class="form-group mt-3" style="display: none;">
+                <div class="alert alert-info">
+                    默认滑动参数：起始坐标(0.5, 0.8) 终点坐标(0.5, 0.2) 持续时间：1000ms
+                </div>
+            </div>
+
+            <!-- 文本输入框 -->
+            <div id="enterTextField" class="form-group mt-3" style="display: none;">
+                <label for="enterText">输入文本</label>
+                <input type="text" class="form-control" id="enterText">
+            </div>
+
+            <input type="text" id="remarkInput" class="form-control" placeholder="请输入备注（非必填）">
+            <button id="submitElementBtn" class="btn btn-success mt-2">提交元素信息</button>
+
+            <div id="caseStorageContainer"
+                 style="display: none; margin-top: 15px; padding-top: 15px; border-top: 1px solid #ddd;">
+                <h3>测试用例信息</h3>
+                <div>已存储元素ID: <span id="storedElementIds">[]</span></div>
+                <input type="text" id="caseNameInput" class="form-control" placeholder="请输入测试用例名称"
+                       style="margin-top: 10px;">
+                <button id="submitCaseBtn" class="btn btn-primary mt-2"
+                        style="margin-top: 10px; background-color: #4CAF50; color: white; padding: 5px 10px; border: none; border-radius: 4px; cursor: pointer;">
+                    提交测试用例
+                </button>
+            </div>
+
+
+        </div>
+
+
+        <!-- 右侧：投屏画布 + DOM 树 -->
+        <div class="content">
+            <div id="element-info-container">
+                <h2>元素信息</h2>
+                <pre id="elementInfo">点击获取元素信息...</pre>
+            </div>
+            <canvas id="videoCanvas" width="1080" height="2400"></canvas>
+        </div>
+    </div>
+
+    <!-- 右侧 DOM 树展示区域 -->
+    <div class="dom-tree-container">
+        <h2>DOM Tree</h2>
+        <pre id="domTree">Loading...</pre>
+    </div>
+</div>
+
+
+<script>
+    // 定义一个获取 URL 参数
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // 从 URL 中获取 unique_id
+    const uniqueId = getQueryParam('unique_id');
+    if (!uniqueId) {
+        console.error("缺少 unique_id 参数！");
+    } else {
+        console.log("获取到 unique_id:", uniqueId);
+    }
+
+
+    // 视频流 WebSocket
+    // 确保 WebSocket 连接到 8090 端口
+    const wsProtocol = window.location.protocol === "https:" ? "wss://" : "ws://";
+    const wsHost = window.location.hostname + ":8090";  // WebSocket 服务器在 8090 端口
+    // 拼接 URL 时将 unique_id 放到查询参数中
+    const videoSocket = new WebSocket(`${wsProtocol}${wsHost}/ws/video_stream/?unique_id=${uniqueId}`);
+
+    videoSocket.onopen = () => {
+        console.log("Video Stream WebSocket 连接成功:", videoSocket.url);
+    };
+
+    videoSocket.onerror = (error) => {
+        console.error("Video Stream WebSocket 连接失败:", error);
+    };
+
+    const canvas = document.getElementById("videoCanvas");
+    const ctx = canvas.getContext("2d");
+    const status = document.getElementById("status");
+    const modeSwitch = document.getElementById('modeSwitch')
+    const modeIndicator = document.getElementById("modeIndicator")
+
+    // 模式控制
+    let isControlMode = true; // true为控制模式，false为DOM查看模式
+
+    //长按相关变量
+    let pressTimer = null;
+    let isLongPress = false;
+    const LONG_PRESS_DURATION = 500;
+
+    // 滑动变量相关
+    let isDragging = false;
+    let startX = 0;
+    let startY = 0;
+    let lastX = 0;
+    let lastY = 0;
+    const SWIPE_THRESHOLD = 10; // 最小滑动阈值
+
+    // 计算比例
+    const DEVICE_WIDTH = 1080;
+    const DEVICE_HEIGHT = 2400;
+    const CANVAS_DISPLAY_WIDTH = 360;
+    const CANVAS_DISPLAY_HEIGHT = 800;
+    const SCALE_X = DEVICE_WIDTH / CANVAS_DISPLAY_WIDTH;
+    const SCALE_Y = DEVICE_HEIGHT / CANVAS_DISPLAY_HEIGHT;
+
+    // 模式切换
+    modeSwitch.onclick = () => {
+        isControlMode = !isControlMode;
+        modeSwitch.textContent = isControlMode ? "Switch to DOM Mode" : "Switch to Control Mode";
+        modeIndicator.textContent = isControlMode ? "Control Mode" : "DOM Mode";
+    };
+
+
+    videoSocket.onopen = () => {
+        status.textContent = "Connected";
+        status.style.color = "#4CAF50";
+    };
+
+    videoSocket.onmessage = (event) => {
+        try {
+            const data = JSON.parse(event.data);
+
+            if (data.action === "update_dom_tree") {
+                document.getElementById("domTree").textContent = data.dom_tree;
+                return;
+            }
+
+            if (data.action === "highlight_dom") {
+                displayElementInfo(data.element);
+                return;
+            }
+        } catch (e) {
+            // 解析失败，说明是视频流数据
+        }
+
+        // 处理视频流
+        const blob = new Blob([event.data], {type: "image/jpeg"});
+        const img = new Image();
+
+        img.onload = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+
+        img.src = URL.createObjectURL(blob);
+    };
+
+
+    // 显示 UI 元素信息
+    function displayElementInfo(element) {
+        const elementInfoContainer = document.getElementById("elementInfo");
+        const remarkInput = document.getElementById("remarkInput");
+
+        if (!element) {
+            elementInfoContainer.innerHTML = "<p>未找到元素</p>";
+            remarkInput.value = ""; // 清空备注
+            return;
+        }
+
+        let elementText = JSON.stringify(element, null, 2);
+        elementText = elementText.replace(/"([^"]+)":/g, '<span style="color: blue;">"$1":</span>');
+
+        elementInfoContainer.innerHTML = `<pre>${elementText}</pre>`;
+
+        // 设置备注输入框的值 - 优先使用text，如果为空则使用content-desc
+        const displayText = element.text || element["content-desc"] || "";
+        remarkInput.value = displayText;
+    }
+
+
+    videoSocket.onclose = () => {
+        status.textContent = "Disconnected";
+        status.style.color = "#f44336";
+    };
+
+    // 获取实际坐标
+    function getScaledCoordinates(clientX, clientY) {
+        const rect = canvas.getBoundingClientRect();
+        const x = (clientX - rect.left) * (canvas.width / rect.width)
+        const y = (clientY - rect.top) * (canvas.height / rect.height)
+        return {x, y};
+
+    }
+
+    // 鼠标按下事件
+    canvas.addEventListener('mousedown', () => {
+        const coords = getScaledCoordinates(event.clientX, event.clientY);
+
+        videoSocket.send(JSON.stringify({
+            action: 'touch',
+            type: 'tap',
+            x: coords.x / DEVICE_WIDTH,
+            y: coords.y / DEVICE_HEIGHT,
+            dom_mode: !isControlMode  // 发送当前是否是 DOM 模式
+        }));
+    });
+
+    // 鼠标移动事件
+    canvas.addEventListener('mousemove', (event) => {
+        if (!isControlMode || !isDragging) return;
+
+        const coords = getScaledCoordinates(event.clientX, event.clientY);
+
+        // 如果移动距离超过阈值，取消长按
+        const moveDistance = Math.sqrt(
+            Math.pow(coords.x - startX, 2) +
+            Math.pow(coords.y - startY, 2)
+        );
+
+        if (moveDistance > SWIPE_THRESHOLD) {
+            if (pressTimer) {
+                clearTimeout(pressTimer);
+                pressTimer = null;
+            }
+        }
+
+        lastX = coords.x;
+        lastY = coords.y;
+    });
+
+    // 鼠标松开事件
+    canvas.addEventListener('mouseup', (event) => {
+        if (!isControlMode) {
+            // DOM模式下，发送坐标获取DOM信息
+            const coords = getScaledCoordinates(event.clientX, event.clientY);
+            videoSocket.send(JSON.stringify({
+                action: 'get_dom_at',
+                x: coords.x / DEVICE_WIDTH,
+                y: coords.y / DEVICE_HEIGHT
+            }));
+            return;
+        }
+
+        const coords = getScaledCoordinates(event.clientX, event.clientY);
+        clearTimeout(pressTimer);
+
+        if (isDragging && !isLongPress) {
+            const moveDistance = Math.sqrt(
+                Math.pow(coords.x - startX, 2) +
+                Math.pow(coords.y - startY, 2)
+            );
+
+            if (moveDistance > SWIPE_THRESHOLD) {
+                // 发送滑动事件
+                videoSocket.send(JSON.stringify({
+                    action: 'swipe',
+                    startX: startX / DEVICE_WIDTH,
+                    startY: startY / DEVICE_HEIGHT,
+                    endX: coords.x / DEVICE_WIDTH,
+                    endY: coords.y / DEVICE_HEIGHT,
+                    duration: Math.min(moveDistance, 300) // 根据距离决定滑动时长
+                }));
+            } else {
+                // 发送点击事件
+                videoSocket.send(JSON.stringify({
+                    action: 'touch',
+                    type: 'tap',
+                    x: coords.x / DEVICE_WIDTH,
+                    y: coords.y / DEVICE_HEIGHT
+                }));
+            }
+        }
+
+        isDragging = false;
+        isLongPress = false;
+        pressTimer = null;
+    });
+
+    // 鼠标离开事件
+    canvas.addEventListener('mouseleave', () => {
+        if (pressTimer) {
+            clearTimeout(pressTimer);
+            pressTimer = null;
+        }
+        isDragging = false;
+        isLongPress = false;
+    });
+
+
+    document.getElementById("startBtn").onclick = () => {
+        videoSocket.send("start");
+        status.textContent = "Streaming...";
+    };
+
+    document.getElementById("stopBtn").onclick = () => {
+        videoSocket.send("stop");
+        status.textContent = "Stopped";
+    };
+
+    // Clean up on page unload
+    window.onbeforeunload = () => {
+        videoSocket.close();
+        domSocket.close();
+    };
+
+    // 解析 URL 参数
+    function getQueryParam(param) {
+        let searchParams = new URLSearchParams(window.location.search);
+        return searchParams.get(param);
+    }
+
+    // 获取设备名称并显示
+    let deviceName = getQueryParam("name");
+    if (deviceName) {
+        document.getElementById("pageTitle").textContent += " - " + decodeURIComponent(deviceName);
+    }
+
+    // 展示对应产品，模块，功能
+    document.addEventListener("DOMContentLoaded", function () {
+        let productNameSelect = document.getElementById("productNameSelect");
+        let modelSelect = document.getElementById("modelSelect");
+        let functionSelect = document.getElementById("functionSelect");
+
+        // 获取所有产品名称
+        fetch("/element_management/get_products/")
+            .then(response => response.json())
+            .then(data => {
+                data.products.forEach(product => {
+                    let option = document.createElement("option");
+                    option.value = product.product_name;
+                    option.textContent = product.product_name;
+                    productNameSelect.appendChild(option);
+                });
+            })
+            .catch(error => console.error("获取产品数据失败:", error));
+
+        // 监听 `product_name` 变化，加载对应的 `model`
+        productNameSelect.addEventListener("change", function () {
+            let selectedProduct = this.value;
+            modelSelect.innerHTML = '<option value="">请选择型号</option>';
+            functionSelect.innerHTML = '<option value="">请先选择型号</option>';
+            modelSelect.disabled = true;
+            functionSelect.disabled = true;
+
+            if (selectedProduct) {
+                fetch(`/element_management/get_products/?product_name=${selectedProduct}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.models.forEach(item => {
+                            let option = document.createElement("option");
+                            option.value = item.model;
+                            option.textContent = item.model;
+                            modelSelect.appendChild(option);
+                        });
+                        modelSelect.disabled = false;
+                    })
+                    .catch(error => console.error("获取型号数据失败:", error));
+            }
+        });
+
+        // 监听 `model` 变化，加载对应的 `function`
+        modelSelect.addEventListener("change", function () {
+            let selectedProduct = productNameSelect.value;
+            let selectedModel = this.value;
+            functionSelect.innerHTML = '<option value="">请选择功能</option>';
+            functionSelect.disabled = true;
+
+            if (selectedModel) {
+                fetch(`/element_management/get_products/?product_name=${selectedProduct}&model=${selectedModel}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.functions.forEach(item => {
+                            let option = document.createElement("option");
+                            option.value = item.function;
+                            option.textContent = item.function;
+                            functionSelect.appendChild(option);
+                        });
+                        functionSelect.disabled = false;
+                    })
+                    .catch(error => console.error("获取功能数据失败:", error));
+            }
+        });
+        // 添加操作方式选择的事件监听
+        let operationTypeSelect = document.getElementById("operationTypeSelect");
+        operationTypeSelect.addEventListener("change", function () {
+            // 隐藏所有额外字段
+            const allFields = ["longPressFields", "swipeFields", "enterTextField"];
+            allFields.forEach(fieldId => {
+                document.getElementById(fieldId).style.display = "none";
+            });
+
+            // 根据选择显示相应字段并设置默认值
+            const selectedOperation = this.value;
+            switch (selectedOperation) {
+                case 'long_press':
+                    document.getElementById("longPressFields").style.display = "block";
+                    break;
+                case 'swipe':
+                case 'click_after_swiping':
+                    document.getElementById("swipeFields").style.display = "block";
+                    // 清空输入框的值
+                    document.getElementById("startX").value = "";
+                    document.getElementById("startY").value = "";
+                    document.getElementById("endX").value = "";
+                    document.getElementById("endY").value = "";
+                    document.getElementById("swipeDuration").value = "1000";
+                    break;
+                case 'from_bottom_to_top_swipe':
+                    document.getElementById("swipeFields").style.display = "block";
+                    // 设置默认值
+                    document.getElementById("startX").value = "0.5";
+                    document.getElementById("startY").value = "0.8";
+                    document.getElementById("endX").value = "0.5";
+                    document.getElementById("endY").value = "0.2";
+                    document.getElementById("swipeDuration").value = "1000";
+                    break;
+                case 'enter_text':
+                    document.getElementById("enterTextField").style.display = "block";
+                    break;
+            }
+        });
+    });
+
+    // 测试用例存储相关变量
+    let isStoringCase = false;
+    let storedElementIds = [];
+    let lastProductName = "";
+    let lastModel = "";
+    let lastFunction = "";
+
+    // 自动存储按钮点击事件
+    document.getElementById("autoStoreBtn").addEventListener("click", function () {
+        isStoringCase = !isStoringCase;
+
+        if (isStoringCase) {
+            // 开始存储
+            this.textContent = "存储Case中";
+            this.style.backgroundColor = "#FF5722";
+            storedElementIds = []; // 清空存储的ID列表
+            document.getElementById("storedElementIds").textContent = "[]";
+            document.getElementById("caseStorageContainer").style.display = "block";
+        } else {
+            // 结束存储
+            this.textContent = "开始存储Case";
+            this.style.backgroundColor = "#FF9800";
+        }
+    });
+
+    // 修改提交元素信息的事件处理逻辑，增加ID保存
+    // 修改后的提交元素信息事件处理函数（合并了两个版本的功能）
+    document.getElementById("submitElementBtn").addEventListener("click", function () {
+        let productName = document.getElementById("productNameSelect").value;
+        let model = document.getElementById("modelSelect").value;
+        let func = document.getElementById("functionSelect").value;
+        let elementInfoText = document.getElementById("elementInfo").textContent;
+        let remark = document.getElementById("remarkInput").value || "无";
+        let operationType = document.getElementById("operationTypeSelect").value;
+
+        if (!productName || !model || !func || !elementInfoText.trim() || !operationType) {
+            alert("请选择完整的产品信息、操作方式，并获取元素信息");
+            return;
+        }
+
+        // 存储当前产品信息用于后续测试用例
+        lastProductName = productName;
+        lastModel = model;
+        lastFunction = func;
+
+        // 解析元素信息
+        let elementInfo;
+        try {
+            elementInfo = JSON.parse(elementInfoText);
+        } catch (e) {
+            alert("元素信息格式错误");
+            return;
+        }
+
+        // 准备提交数据
+        let data = {
+            product_name: productName,
+            model: model,
+            function: func,
+            text: elementInfo.text || "",
+            content_desc: elementInfo["content-desc"] || "",
+            original_x_proportion: elementInfo.original_x_proportion || 0,
+            original_y_proportion: elementInfo.original_y_proportion || 0,
+            operate_type: operationType,
+            remark: remark
+        };
+
+        // 根据操作类型添加额外数据
+        switch (operationType) {
+            case 'long_press':
+                data.duration = document.getElementById("duration").value;
+                break;
+            case 'swipe':
+            case 'click_after_swiping':
+            case 'from_bottom_to_top_swipe':
+                data.start_x_start_y_end_x_end_y = [
+                    document.getElementById("startX").value,
+                    document.getElementById("startY").value,
+                    document.getElementById("endX").value,
+                    document.getElementById("endY").value
+                ].join(",");
+                data.duration = document.getElementById("swipeDuration").value;
+                break;
+            case 'enter_text':
+                data.enter_text = document.getElementById("enterText").value;
+                break;
+        }
+
+        // 发送数据到后端
+        fetch("/element_management/add_element_info/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
+            .then(response => response.json())
+            .then(result => {
+                alert(result.message);
+
+                // 添加新功能：如果正在存储case，则保存元素ID
+                if (isStoringCase && result.status === "success" && result.id) {
+                    storedElementIds.push(result.id);
+                    document.getElementById("storedElementIds").textContent = JSON.stringify(storedElementIds);
+                }
+            })
+            .catch(error => {
+                console.error("提交元素信息失败:", error);
+                alert("提交失败，请检查输入并重试");
+            });
+    });
+
+    // 提交测试用例的事件处理
+    document.getElementById("submitCaseBtn").addEventListener("click", function () {
+        const caseName = document.getElementById("caseNameInput").value;
+
+        if (!caseName) {
+            alert("请输入测试用例名称");
+            return;
+        }
+
+        if (storedElementIds.length === 0) {
+            alert("请先添加元素信息");
+            return;
+        }
+
+        // 准备提交数据
+        const caseData = {
+            case_name: caseName,
+            product_name: lastProductName,
+            model: lastModel,
+            function: lastFunction,
+            element_id: storedElementIds
+        };
+
+        // 发送数据到后端
+        fetch("/element_management/add_test_case/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(caseData)
+        })
+            .then(response => response.json())
+            .then(result => {
+                alert(result.message);
+                if (result.status === "success") {
+                    // 重置存储状态
+                    document.getElementById("caseNameInput").value = "";
+                    storedElementIds = [];
+                    document.getElementById("storedElementIds").textContent = "[]";
+                    document.getElementById("autoStoreBtn").textContent = "开始存储Case";
+                    document.getElementById("autoStoreBtn").style.backgroundColor = "#FF9800";
+                    document.getElementById("caseStorageContainer").style.display = "none";
+                    isStoringCase = false;
+                }
+            })
+            .catch(error => {
+                console.error("提交测试用例失败:", error);
+                alert("提交失败，请检查输入并重试");
+            });
+    });
+
+
+</script>
+</body>
+</html>

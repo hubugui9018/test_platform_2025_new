@@ -1,0 +1,410 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>用例调试与执行</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+<div class="container mt-4">
+    <h1>用例调试与执行</h1>
+
+    <!-- 原有的筛选部分保持不变 -->
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label class="form-label">项目名称</label>
+            <select class="form-select" id="filterProduct">
+                <option value="">请选择项目名称</option>
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">页面</label>
+            <select class="form-select" id="filterModel" disabled>
+                <option value="">请选择页面</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">用例名称</label>
+            <div class="input-group">
+                <input type="text" class="form-control" id="searchCase" placeholder="请输入用例名称">
+                <button class="btn btn-primary" id="searchBtn">搜索</button>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">&nbsp;</label>
+            <button class="btn btn-secondary d-block" id="resetFilter">重置筛选</button>
+        </div>
+    </div>
+
+    <!-- 新增的设备选择和提交按钮 -->
+    <div class="row mb-3">
+        <div class="col-md-3">
+            <label class="form-label">选择设备</label>
+            <select class="form-select" id="executionDeviceSelect">
+                <option value="">选择设备</option>
+                {% for device in devices %}
+                    <option value="{{ device.unique_id }}" data-type="{{ device.device_type }}"
+                            data-version="{{ device.version }}">{{ device.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label">&nbsp;</label>
+            <button class="btn btn-success d-block" id="submitExecution">提交执行</button>
+        </div>
+    </div>
+
+    <!-- 表格部分 -->
+    <table class="table table-bordered">
+        <thead>
+        <tr>
+            <th><input type="checkbox" id="selectAll"></th> <!-- 全选复选框 -->
+            <th>用例名称</th>
+            <th>项目名称</th>
+            <th>页面</th>
+            <th>用例内容</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+
+        <tbody id="caseTableBody">
+        <!-- 数据将通过 JavaScript 动态加载 -->
+        </tbody>
+    </table>
+</div>
+
+
+<script>
+    $(document).ready(function () {
+        // 初始化产品下拉框
+        $.get("/element_management/check_case_list/", function (data) {
+            $("#filterProduct").empty().append('<option value="">请选择项目名称</option>');
+            data.products.forEach(p => {
+                $("#filterProduct").append(`<option value="${p.product_name}">${p.product_name}</option>`);
+            });
+        });
+
+        // 监听产品选择变化
+        $("#filterProduct").change(function () {
+            const product = $(this).val();
+            $("#filterModel").prop("disabled", true).empty().append('<option value="">请选择页面</option>');
+
+            if (product) {
+                $.get("/element_management/check_case_list/", {
+                    product_name: product
+                }, function (data) {
+                    $("#filterModel").empty().append('<option value="">请选择页面</option>');
+                    // 添加"全部"选项
+                    $("#filterModel").append('<option value="全部">全部</option>');
+
+                    if (data.models && data.models.length > 0) {
+                        data.models.forEach(model => {
+                            $("#filterModel").append(`<option value="${model.model}">${model.model}</option>`);
+                        });
+                        $("#filterModel").prop("disabled", false);
+                    }
+                });
+            }
+        });
+
+        // 监听页面选择变化，加载表格数据
+        $("#filterModel").change(function () {
+            loadTableData();
+        });
+
+        // 加载表格数据的函数
+        function loadTableData() {
+            const product = $("#filterProduct").val();
+            const model = $("#filterModel").val();
+
+            if (product && (model === "全部" || model)) {
+                $.get("/element_management/check_case_list/", {
+                    product_name: product,
+                    model: model
+                }, function (data) {
+                    console.log("后端返回的数据：", data); // 打印后端返回的数据
+                    $("#caseTableBody").empty();
+                    if (data.products && data.products.length > 0) {
+                        data.products.forEach(item => {
+                            // 添加设备选择下拉框和调试按钮
+                            $("#caseTableBody").append(`
+    <tr>
+        <td><input type="checkbox" class="caseCheckbox" data-id="${item.id}"></td>
+        <td>${item.case_name}</td>
+        <td>${item.product_name}</td>
+        <td>${item.model}</td>
+        <td class="case-content">${item.element_details || ''}</td>
+        <td>
+            <div class="d-flex align-items-center">
+                <select class="form-select deviceSelect me-2">
+                    <option value="">选择设备</option>
+                    {% for device in devices %}
+                        <option value="{{ device.unique_id }}" data-type="{{ device.device_type }}"
+                                data-version="{{ device.version }}">{{ device.name }}</option>
+                    {% endfor %}
+                </select>
+                <button class="btn btn-primary btn-sm debugBtn"
+                    data-id="${item.id}"
+                    data-elements='${item.elements_list}'>调试</button>
+            </div>
+        </td>
+    </tr>
+`);
+                        });
+                    } else {
+                        $("#caseTableBody").append(`
+                    <tr>
+                        <td colspan="5" class="text-center">未找到匹配的测试用例</td>
+                    </tr>
+                `);
+                    }
+                });
+            }
+        }
+
+
+        // 添加搜索按钮的点击事件
+        $("#searchBtn").click(function () {
+            const searchKeyword = $("#searchCase").val().trim();
+            if (searchKeyword) {
+                searchCases(searchKeyword);
+            } else {
+                // 如果搜索框为空，恢复显示筛选结果
+                loadTableData();
+            }
+        });
+
+        // 添加搜索框的回车事件
+        $("#searchCase").keypress(function (e) {
+            if (e.which === 13) {  // 回车键的 keyCode 是 13
+                $("#searchBtn").click();
+            }
+        });
+
+        // 搜索功能实现
+        function searchCases(keyword) {
+            $.get("/element_management/search_case/", {
+                search_keyword: keyword
+            }, function (response) {
+                $("#caseTableBody").empty();
+
+                if (response.products && response.products.length > 0) {
+                    response.products.forEach(item => {
+                        $("#caseTableBody").append(`
+                            <tr>
+                                <td>${item.case_name}</td>
+                                <td>${item.product_name}</td>
+                                <td>${item.model}</td>
+                                <td class="case-content">${item.element_details || ''}</td>
+                                <td>
+                                    <select class="form-select deviceSelect me-2">
+                                        <option value="">选择设备</option>
+                                        {% for device in devices %}
+                                            <option value="${device.unique_id}" data-type="${device.device_type}"
+                                                data-version="${device.version}">${device.name}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button class="btn btn-primary btn-sm debugBtn"
+                                        data-id="${item.id}"
+                                        data-elements='${item.elements_list}'>调试</button>
+                                </td>
+                            </tr>
+                        `);
+                    });
+                } else {
+                    $("#caseTableBody").append(`
+                        <tr>
+                            <td colspan="5" class="text-center">未找到匹配的测试用例</td>
+                        </tr>
+                    `);
+                }
+            }).fail(function () {
+                alert("搜索请求失败，请检查网络连接");
+            });
+        }
+
+        // 重置筛选按钮，同时清空搜索框
+        $("#resetFilter").click(function () {
+            $("#filterProduct").val("");
+            $("#filterModel").val("").prop("disabled", true);
+            $("#searchCase").val("");  // 清空搜索框
+            $("#caseTableBody").empty();
+        });
+
+
+        // 全选/全不选功能
+        $("#selectAll").click(function () {
+            $(".caseCheckbox").prop('checked', this.checked);
+        });
+
+        // 提交执行按钮点击事件
+$("#submitExecution").click(function () {
+    const selectedDevice = $("#executionDeviceSelect").val();
+    const deviceType = $("#executionDeviceSelect").find("option:selected").data("type");
+    const deviceVersion = $("#executionDeviceSelect").find("option:selected").data("version");
+
+    if (!selectedDevice) {
+        alert("请选择设备");
+        return;
+    }
+
+    // 获取所有选中的用例ID
+    const selectedCaseIds = [];
+    $(".caseCheckbox:checked").each(function () {
+        const caseId = $(this).data("id");
+        selectedCaseIds.push(caseId);
+    });
+
+    if (selectedCaseIds.length === 0) {
+        alert("请选择至少一个用例");
+        return;
+    }
+
+    // 发送请求
+    $.ajax({
+        url: "/element_management/execution_case/",
+        method: "POST",
+        contentType: "application/json",
+        data: JSON.stringify({
+            case_ids: selectedCaseIds,  // 只传递用例ID列表
+            unique_id: selectedDevice,
+            device_type: deviceType,
+            device_version: deviceVersion,
+            product_name: $("#filterProduct").val()
+        }),
+        success: function (response) {
+            if (response.status === "success") {
+                alert("执行成功");
+            } else {
+                alert("执行失败: " + response.message);
+            }
+        },
+        error: function (xhr, status, error) {
+            alert("执行请求失败: " + error);
+        }
+    });
+});
+
+        // 调试按钮点击事件
+        $(document).on("click", ".debugBtn", function () {
+            const deviceSelect = $(this).closest("tr").find(".deviceSelect");
+            const unique_id = deviceSelect.val();
+            const device_type = deviceSelect.find("option:selected").data("type");
+            const device_version = deviceSelect.find("option:selected").data("version");
+
+            // 获取 product_name
+            const product_name = $(this).closest("tr").find("td:nth-child(3)").text().trim();
+
+            // 获取 elements_list 并处理
+            let elements_list_str = $(this).data("elements");
+            console.log("原始 elements_list 数据:", elements_list_str);
+
+            // 处理 elements_list 数据
+            let elements_list;
+            try {
+                // 如果已经是数组则直接使用
+                if (Array.isArray(elements_list_str)) {
+                    elements_list = elements_list_str;
+                }
+                // 如果是字符串则尝试解析
+                else if (typeof elements_list_str === 'string') {
+                    elements_list = JSON.parse(elements_list_str.trim());
+                }
+                // 如果都不是，抛出错误
+                else {
+                    throw new Error("无效的数据类型");
+                }
+            } catch (error) {
+                console.error("处理 elements_list 失败:", error);
+                alert("解析用例数据失败，请检查数据格式");
+                return;
+            }
+
+            if (!unique_id) {
+                alert("请选择设备");
+                return;
+            }
+
+            // 发送调试请求
+            $.ajax({
+                url: "/element_management/debug_case/",
+                method: "POST",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    elements_list: elements_list,
+                    unique_id: unique_id,
+                    device_type: device_type,
+                    device_version: device_version,
+                    product_name: product_name
+                }),
+                success: function (response) {
+                    if (response.status === "success") {
+                        alert("调试成功");
+                    } else {
+                        alert("调试失败: " + response.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    alert("调试请求失败: " + error);
+                }
+            });
+        });
+
+        function loadTableData() {
+            const product = $("#filterProduct").val();
+            const model = $("#filterModel").val();
+
+            if (product && (model === "全部" || model)) {
+                $.get("/element_management/check_case_list/", {
+                    product_name: product,
+                    model: model
+                }, function (data) {
+                    console.log("后端返回的数据：", data); // 打印后端返回的数据
+                    $("#caseTableBody").empty();
+                    if (data.products && data.products.length > 0) {
+                        data.products.forEach(item => {
+                            // 添加设备选择下拉框和调试按钮
+                            $("#caseTableBody").append(`
+                        <tr>
+                            <td><input type="checkbox" class="caseCheckbox" data-id="${item.id}"></td>
+                            <td>${item.case_name}</td>
+                            <td>${item.product_name}</td>
+                            <td>${item.model}</td>
+                            <td class="case-content">${item.element_details || ''}</td>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <select class="form-select deviceSelect me-2">
+                                        <option value="">选择设备</option>
+                                        {% for device in devices %}
+                                            <option value="{{ device.unique_id }}" data-type="{{ device.device_type }}"
+                                                    data-version="{{ device.version }}">{{ device.name }}</option>
+                                        {% endfor %}
+                                    </select>
+                                    <button class="btn btn-primary btn-sm debugBtn"
+                                        data-id="${item.id}"
+                                        data-elements='${item.elements_list}'>调试</button>
+                                </div>
+                            </td>
+                        </tr>
+                    `);
+                        });
+                    } else {
+                        $("#caseTableBody").append(`
+                    <tr>
+                        <td colspan="6" class="text-center">未找到匹配的测试用例</td>
+                    </tr>
+                `);
+                    }
+                });
+            }
+        }
+
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

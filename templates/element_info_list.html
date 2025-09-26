@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>测试平台2025 - 首页</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet"/>
+    <link href="{% static 'css/styles.css' %} " rel="stylesheet"/>
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="sb-nav-fixed">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <!-- Navbar Brand-->
+    <h1 class="navbar-brand ps-3" href="">Test Platform 2025</h1>
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+            class="fas fa-bars"></i></button>
+    <!-- Navbar Search-->
+    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+        <div class="input-group">
+            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
+                   aria-describedby="btnNavbarSearch"/>
+            <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+        </div>
+    </form>
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#!">Settings</a></li>
+                <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                <li>
+                    <hr class="dropdown-divider"/>
+                </li>
+                <li><a class="dropdown-item" href="#!">Logout</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">设备管理</div>
+                    <a class="nav-link" href="{% url 'device_management' %}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        设备列表
+                    </a>
+                    <div class="sb-sidenav-menu-heading">自动化相关</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"
+                       aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        UI自动化
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{% url 'element_management' %}">产品页面管理</a>
+                            <a class="nav-link" href="{% url 'element_info_list' %}">页面元素管理</a>
+                            <a class="nav-link" href="{% url 'test_case_list' %}">测试用例管理</a>
+                            <a class="nav-link" href="{% url 'case_debug_implement' %}">用例调试与执行</a>
+                            <a class="nav-link" href="{% url 'execution_case_record' %}">用例执行记录</a>
+                        </nav>
+                    </div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
+                       aria-expanded="false" aria-controls="collapsePages">
+                        <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                        Pages
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#pagesCollapseAuth" aria-expanded="false"
+                               aria-controls="pagesCollapseAuth">
+                                Authentication
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne"
+                                 data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="login.html">Login</a>
+                                    <a class="nav-link" href="register.html">Register</a>
+                                    <a class="nav-link" href="password.html">Forgot Password</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#pagesCollapseError" aria-expanded="false"
+                               aria-controls="pagesCollapseError">
+                                Error
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne"
+                                 data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="401.html">401 Page</a>
+                                    <a class="nav-link" href="404.html">404 Page</a>
+                                    <a class="nav-link" href="500.html">500 Page</a>
+                                </nav>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="sb-sidenav-menu-heading">Addons</div>
+                    <a class="nav-link" href="charts.html">
+                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                        Charts
+                    </a>
+                    <a class="nav-link" href="tables.html">
+                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                        Tables
+                    </a>
+                </div>
+            </div>
+            <div class="sb-sidenav-footer">
+                <div class="small">Logged in as:</div>
+                Start Bootstrap
+            </div>
+        </nav>
+    </div>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container mt-4">
+                <h1>元素信息管理</h1>
+
+                <!-- 筛选区域 -->
+                <div class="card mb-4">
+                    <div class="card-header">
+                        筛选条件
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                <label class="form-label">产品名称</label>
+                                <select class="form-select" id="productFilter">
+                                    <option value="">请选择</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">页面</label>
+                                <select class="form-select" id="modelFilter" disabled>
+                                    <option value="">请选择</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label class="form-label">功能</label>
+                                <select class="form-select" id="functionFilter" disabled>
+                                    <option value="">请选择</option>
+                                    <option value="全部">全部</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <button class="btn btn-primary me-2" id="filterBtn">筛选</button>
+                                <button class="btn btn-secondary" id="resetBtn">重置</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>产品名称</th>
+                        <th>页面</th>
+                        <th>功能</th>
+                        <th>文本</th>
+                        <th>内容</th>
+                        <th>操作类型</th>
+                        <th>起始xy，结束xy</th>
+                        <th>持续时间</th>
+                        <th>输入文本</th>
+                        <th>备注</th>
+                        <th>断言</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody id="elementTableBody">
+                    {% for element in page_obj %}
+                        <tr>
+                            <td>{{ element.product_name }}</td>
+                            <td>{{ element.model }}</td>
+                            <td>{{ element.function }}</td>
+                            <td>{{ element.text }}</td>
+                            <td>{{ element.content_desc }}</td>
+                            <td>{{ element.operate_type }}</td>
+                            <td>{{ element.start_x_start_y_end_x_end_y }}</td>
+                            <td>{{ element.duration }}</td>
+                            <td>{{ element.enter_text }}</td>
+                            <td>{{ element.remark }}</td>
+                            <td>{{ element.assertion }}</td>
+
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <!-- 编辑按钮 -->
+                                    <button class="btn btn-warning btn-sm editElementBtn me-2"
+                                            data-id="{{ element.id }}"
+                                            data-product="{{ element.product_name }}"
+                                            data-model="{{ element.model }}"
+                                            data-function="{{ element.function }}"
+                                            data-text="{{ element.text }}"
+                                            data-content="{{ element.content_desc }}"
+                                            data-x="{{ element.original_x_proportion }}"
+                                            data-y="{{ element.original_y_proportion }}"
+                                            data-start_x_start_y_end_x_end_y="{{ element.start_x_start_y_end_x_end_y }}"
+                                            data-operate_type="{{ element.operate_type }}"
+                                            data-duration="{{ element.duration }}"
+                                            data-enter_text="{{ element.enter_text }}"
+                                            data-remark="{{ element.remark }}"
+                                            data-assertion="{{ element.assertion }}">编辑
+                                    </button>
+
+                                    <!-- 删除按钮 -->
+                                    <button class="btn btn-danger btn-sm deleteElementBtn me-2"
+                                            data-id="{{ element.id }}">删除
+                                    </button>
+
+                                    <!-- 设备选择框 -->
+                                    <select class="form-select deviceSelect me-2">
+                                        <option value="">选择设备</option>
+                                        {% for device in devices %}
+                                            <option value="{{ device.unique_id }}" data-type="{{ device.device_type }}"
+                                                    data-version="{{ device.version }}">{{ device.name }}</option>
+                                        {% endfor %}
+                                    </select>
+
+                                    <!-- 调试按钮 -->
+                                    <button class="btn btn-primary btn-sm debugElementBtn"
+                                            data-id="{{ element.id }}"
+                                            data-product="{{ element.product_name }}"
+                                            data-text="{{ element.text }}"
+                                            data-content="{{ element.content_desc }}"
+                                            data-x="{{ element.original_x_proportion }}"
+                                            data-y="{{ element.original_y_proportion }}"
+                                            data-start_x_start_y_end_x_end_y="{{ element.start_x_start_y_end_x_end_y }}"
+                                            data-operate_type="{{ element.operate_type }}"
+                                            data-duration="{{ element.duration }}"
+                                            data-enter_text="{{ element.enter_text }}"
+                                            data-assertion="{{ element.assertion }}">调试
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+                <!-- 分页导航 -->
+                <nav aria-label="Page navigation">
+                    <ul class="pagination justify-content-center">
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link"
+                                   href="?page_number=1{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.model %}&model={{ request.GET.model }}{% endif %}{% if request.GET.function %}&function={{ request.GET.function }}{% endif %}"
+                                   aria-label="First">
+                                    <span aria-hidden="true">&laquo;&laquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page_number=
+
+
+
+                                        {{ page_obj.previous_page_number }}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.model %}&model={{ request.GET.model }}{% endif %}{% if request.GET.function %}&function={{ request.GET.function }}{% endif %}"
+                                   aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">&laquo;&laquo;</span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">&laquo;</span>
+                            </li>
+                        {% endif %}
+
+                        {% for i in page_obj.paginator.page_range %}
+                            {% if page_obj.number == i %}
+                                <li class="page-item active"><span class="page-link">{{ i }}</span></li>
+                            {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                                <li class="page-item"><a class="page-link" href="?page_number=
+
+
+
+                                        {{ i }}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.model %}&model={{ request.GET.model }}{% endif %}{% if request.GET.function %}&function={{ request.GET.function }}{% endif %}">{{ i }}</a>
+                                </li>
+                            {% endif %}
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page_number=
+
+
+                                        {{ page_obj.next_page_number }}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.model %}&model={{ request.GET.model }}{% endif %}{% if request.GET.function %}&function={{ request.GET.function }}{% endif %}"
+                                   aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" href="?page_number=
+
+
+                                        {{ page_obj.paginator.num_pages }}{% if request.GET.product_name %}&product_name={{ request.GET.product_name }}{% endif %}{% if request.GET.model %}&model={{ request.GET.model }}{% endif %}{% if request.GET.function %}&function={{ request.GET.function }}{% endif %}"
+                                   aria-label="Last">
+                                    <span aria-hidden="true">&raquo;&raquo;</span>
+                                </a>
+                            </li>
+                        {% else %}
+                            <li class="page-item disabled">
+                                <span class="page-link">&raquo;</span>
+                            </li>
+                            <li class="page-item disabled">
+                                <span class="page-link">&raquo;&raquo;</span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- 编辑模态框 -->
+            <div class="modal fade" id="editElementModal" tabindex="-1" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">编辑元素信息</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <input type="hidden" id="elementId">
+                            <div class="mb-3">
+                                <label class="form-label">产品名称</label>
+                                <input type="text" class="form-control" id="editProductName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">页面</label>
+                                <input type="text" class="form-control" id="editModel" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">功能</label>
+                                <input type="text" class="form-control" id="editFunction" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">文本</label>
+                                <input type="text" class="form-control" id="editText">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">内容</label>
+                                <input type="text" class="form-control" id="editContentDesc">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">原始x坐标</label>
+                                <input type="number" class="form-control" id="editX">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">原始y坐标</label>
+                                <input type="number" class="form-control" id="editY">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">操作类型</label>
+                                <input type="text" class="form-control" id="editOperateType">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">起始xy-结束xy</label>
+                                <input type="text" class="form-control" id="editStartEndXY">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">持续时间</label>
+                                <input type="number" class="form-control" id="editContinuedTime">
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">输入文本</label>
+                                <input type="text" class="form-control" id="editEnterText">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">备注</label>
+                                <input type="text" class="form-control" id="editRemark">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">断言</label>
+                                <input type="text" class="form-control" id="editAssertion">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" id="saveElementBtn">保存</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // 加载产品名称列表
+        loadProductNames();
+
+        // 产品名称改变时加载对应的页面列表
+        $("#productFilter").change(function () {
+            let productName = $(this).val();
+            if (productName) {
+                $("#modelFilter").prop("disabled", false);
+                loadModels(productName);
+            } else {
+                $("#modelFilter").prop("disabled", true);
+                $("#modelFilter").html('<option value="">请选择</option>');
+                $("#functionFilter").prop("disabled", true);
+                $("#functionFilter").html('<option value="">请选择</option><option value="全部">全部</option>');
+            }
+        });
+
+        // 页面改变时加载对应的功能列表
+        $("#modelFilter").change(function () {
+            let productName = $("#productFilter").val();
+            let model = $(this).val();
+            if (model) {
+                $("#functionFilter").prop("disabled", false);
+                loadFunctions(productName, model);
+            } else {
+                $("#functionFilter").prop("disabled", true);
+                $("#functionFilter").html('<option value="">请选择</option><option value="全部">全部</option>');
+            }
+        });
+
+        // 筛选按钮点击事件
+        $("#filterBtn").click(function () {
+            let productName = $("#productFilter").val();
+            let model = $("#modelFilter").val();
+            let function_ = $("#functionFilter").val();
+
+            if (!productName) {
+                alert("请至少选择产品名称");
+                return;
+            }
+
+            // 构建URL参数
+            let url = window.location.pathname + "?";
+            if (productName) url += "product_name=" + encodeURIComponent(productName);
+            if (model) url += "&model=" + encodeURIComponent(model);
+            if (function_) url += "&function=" + encodeURIComponent(function_);
+
+            // 重定向到筛选后的URL
+            window.location.href = url;
+        });
+
+        // 重置按钮点击事件
+        $("#resetBtn").click(function () {
+            // 清空所有选择
+            $("#productFilter").val("");
+            $("#modelFilter").val("").prop("disabled", true);
+            $("#functionFilter").val("").prop("disabled", true);
+
+            // 重定向到无参数的页面
+            window.location.href = window.location.pathname;
+        });
+
+        // 打开编辑模态框
+        $(".editElementBtn").click(function () {
+            $("#elementId").val($(this).data("id"));
+            $("#editProductName").val($(this).data("product"));
+            $("#editModel").val($(this).data("model"));
+            $("#editFunction").val($(this).data("function"));
+            $("#editText").val($(this).data("text"));
+            $("#editContentDesc").val($(this).data("content"));
+            $("#editX").val($(this).data("x"));
+            $("#editY").val($(this).data("y"));
+            $("#editOperateType").val($(this).data("operate_type"));
+            $("#editStartEndXY").val($(this).data("start_x_start_y_end_x_end_y"));
+            $("#editContinuedTime").val($(this).data("duration"));
+            $("#editEnterText").val($(this).data("enter_text"));
+            $("#editRemark").val($(this).data("remark"));
+            $("#editAssertion").val($(this).data("assertion"));
+
+            var myModal = new bootstrap.Modal(document.getElementById('editElementModal'));
+            myModal.show();
+        });
+
+        // 发送修改请求
+        $("#saveElementBtn").click(function () {
+            let elementId = $("#elementId").val();
+            let url = `/element_management/edit_element_info/${elementId}/`;
+
+            let data = {
+                product_name: $("#editProductName").val(),
+                model: $("#editModel").val(),
+                function: $("#editFunction").val(),
+                text: $("#editText").val(),
+                content_desc: $("#editContentDesc").val(),
+                original_x_proportion: $("#editX").val(),
+                original_y_proportion: $("#editY").val(),
+                operate_type: $("#editOperateType").val(),
+                start_x_start_y_end_x_end_y: $("#editStartEndXY").val(),
+                duration: $("#editContinuedTime").val(),
+                enter_text: $("#editEnterText").val(),
+                remark: $("#editRemark").val(),
+                assertion: $("#editAssertion").val()
+            };
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert(response.message);
+                    location.reload();
+                },
+                error: function (xhr) {
+                    alert(xhr.responseJSON ? xhr.responseJSON.message : "修改失败！");
+                }
+            });
+        });
+
+        // 发送删除请求
+        $(".deleteElementBtn").click(function () {
+            let elementId = $(this).data("id");
+            if (confirm("确定删除该元素信息？")) {
+                $.ajax({
+                    url: `/element_management/delete_element_info/${elementId}/`,
+                    type: "POST",
+                    success: function (response) {
+                        alert(response.message);
+                        location.reload();
+                    },
+                    error: function (xhr) {
+                        alert(xhr.responseJSON ? xhr.responseJSON.message : "删除失败！");
+                    }
+                });
+            }
+        });
+
+        // 调试元素进行点击
+        $(".debugElementBtn").click(function () {
+            let elementId = $(this).data("id");
+            let productName = $(this).data("product");
+            let text = $(this).data("text");
+            let contentDesc = $(this).data("content");
+
+            let assertion = $(this).data("assertion");
+
+            let xProportion = $(this).data("x");
+            let yProportion = $(this).data("y");
+            let operate_type = $(this).data("operate_type");
+            let startEndXy = $(this).data("start_x_start_y_end_x_end_y");
+            let duration = $(this).data("duration");
+            let enter = $(this).data("enter_text");
+            let remark = $(this).data("remark");
+
+            let deviceSelect = $(this).closest("tr").find(".deviceSelect");
+            let deviceId = deviceSelect.val();
+            let deviceType = deviceSelect.find(":selected").data("type");
+            let deviceVersion = deviceSelect.find(":selected").data("version");
+
+            if (!deviceId) {
+                alert("请选择设备");
+                return;
+            }
+
+            let data = {
+                product_name: productName,
+                device_id: deviceId,
+                device_type: deviceType,
+                device_version: deviceVersion,
+                text: text,
+                content_desc: contentDesc,
+                x_proportion: xProportion,
+                y_proportion: yProportion,
+                operate_type: operate_type,
+                startEndXy: startEndXy,
+                duration: duration,
+                enter: enter,
+                remark: remark,
+                assertion: assertion
+            };
+
+            $.ajax({
+                url: "/element_management/debug_element/",
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert(response.message);
+                },
+                error: function (xhr) {
+                    alert(xhr.responseJSON ? xhr.responseJSON.message : "调试失败！");
+                }
+            });
+        });
+    });
+
+    // 加载产品名称列表
+    function loadProductNames() {
+        $.ajax({
+            url: "/element_management/check_element_list/",
+            type: "GET",
+            success: function (response) {
+                let productSelect = $("#productFilter");
+                productSelect.empty();
+                productSelect.append('<option value="">请选择</option>');
+
+                response.products.forEach(function (product) {
+                    productSelect.append(`<option value="${product.product_name}">${product.product_name}</option>`);
+                });
+
+                // 如果URL中有产品名称参数，则自动选中
+                let urlParams = new URLSearchParams(window.location.search);
+                let productName = urlParams.get('product_name');
+                if (productName) {
+                    productSelect.val(productName);
+                    loadModels(productName);
+                }
+            }
+        });
+    }
+
+    // 加载页面列表
+    function loadModels(productName) {
+        $.ajax({
+            url: "/element_management/check_element_list/?product_name=" + encodeURIComponent(productName),
+            type: "GET",
+            success: function (response) {
+                let modelSelect = $("#modelFilter");
+                modelSelect.empty();
+                modelSelect.append('<option value="">请选择</option>');
+
+                response.models.forEach(function (model) {
+                    modelSelect.append(`<option value="${model.model}">${model.model}</option>`);
+                });
+
+                // 如果URL中有model参数，则自动选中
+                let urlParams = new URLSearchParams(window.location.search);
+                let model = urlParams.get('model');
+                if (model) {
+                    modelSelect.val(model);
+                    loadFunctions(productName, model);
+                }
+
+                modelSelect.prop("disabled", false);
+            }
+        });
+    }
+
+    // 加载功能列表
+    function loadFunctions(productName, model) {
+        $.ajax({
+            url: "/element_management/check_element_list/?product_name=" + encodeURIComponent(productName) + "&model=" + encodeURIComponent(model),
+            type: "GET",
+            success: function (response) {
+                let functionSelect = $("#functionFilter");
+                functionSelect.empty();
+                functionSelect.append('<option value="">请选择</option>');
+                functionSelect.append('<option value="全部">全部</option>');
+
+                response.products.forEach(function (product) {
+                    functionSelect.append(`<option value="${product.function}">${product.function}</option>`);
+                });
+
+                // 如果URL中有function参数，则自动选中
+                let urlParams = new URLSearchParams(window.location.search);
+                let function_ = urlParams.get('function');
+                if (function_) {
+                    functionSelect.val(function_);
+                }
+
+                functionSelect.prop("disabled", false);
+            }
+        });
+    }
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="/static/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="/static/assets/demo/chart-area-demo.js"></script>
+<script src="/static/assets/demo/chart-bar-demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+        crossorigin="anonymous"></script>
+<script src="/static/js/datatables-simple-demo.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>测试平台2025 - 首页</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet"/>
+    <link href="{% static 'css/styles.css' %} " rel="stylesheet"/>
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body class="sb-nav-fixed">
+<nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+    <!-- Navbar Brand-->
+    <h1 class="navbar-brand ps-3" href="">Test Platform 2025</h1>
+    <!-- Sidebar Toggle-->
+    <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i
+            class="fas fa-bars"></i></button>
+    <!-- Navbar Search-->
+    <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
+        <div class="input-group">
+            <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..."
+                   aria-describedby="btnNavbarSearch"/>
+            <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+        </div>
+    </form>
+    <!-- Navbar-->
+    <ul class="navbar-nav ms-auto ms-md-0 me-3 me-lg-4">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown"
+               aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <li><a class="dropdown-item" href="#!">Settings</a></li>
+                <li><a class="dropdown-item" href="#!">Activity Log</a></li>
+                <li>
+                    <hr class="dropdown-divider"/>
+                </li>
+                <li><a class="dropdown-item" href="#!">Logout</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+<div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+            <div class="sb-sidenav-menu">
+                <div class="nav">
+                    <div class="sb-sidenav-menu-heading">设备管理</div>
+                    <a class="nav-link" href="{% url 'device_management' %}">
+                        <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
+                        设备列表
+                    </a>
+                    <div class="sb-sidenav-menu-heading">自动化相关</div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseLayouts"
+                       aria-expanded="false" aria-controls="collapseLayouts">
+                        <div class="sb-nav-link-icon"><i class="fas fa-columns"></i></div>
+                        UI自动化
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapseLayouts" aria-labelledby="headingOne"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav">
+                            <a class="nav-link" href="{% url 'element_management' %}">产品页面管理</a>
+                            <a class="nav-link" href="{% url 'element_info_list' %}">页面元素管理</a>
+                            <a class="nav-link" href="{% url 'test_case_list' %}">测试用例管理</a>
+                            <a class="nav-link" href="{% url 'case_debug_implement' %}">用例调试与执行</a>
+                            <a class="nav-link" href="{% url 'execution_case_record' %}">用例执行记录</a>
+                        </nav>
+                    </div>
+                    <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapsePages"
+                       aria-expanded="false" aria-controls="collapsePages">
+                        <div class="sb-nav-link-icon"><i class="fas fa-book-open"></i></div>
+                        Pages
+                        <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                    </a>
+                    <div class="collapse" id="collapsePages" aria-labelledby="headingTwo"
+                         data-bs-parent="#sidenavAccordion">
+                        <nav class="sb-sidenav-menu-nested nav accordion" id="sidenavAccordionPages">
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#pagesCollapseAuth" aria-expanded="false"
+                               aria-controls="pagesCollapseAuth">
+                                Authentication
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseAuth" aria-labelledby="headingOne"
+                                 data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="login.html">Login</a>
+                                    <a class="nav-link" href="register.html">Register</a>
+                                    <a class="nav-link" href="password.html">Forgot Password</a>
+                                </nav>
+                            </div>
+                            <a class="nav-link collapsed" href="#" data-bs-toggle="collapse"
+                               data-bs-target="#pagesCollapseError" aria-expanded="false"
+                               aria-controls="pagesCollapseError">
+                                Error
+                                <div class="sb-sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                            </a>
+                            <div class="collapse" id="pagesCollapseError" aria-labelledby="headingOne"
+                                 data-bs-parent="#sidenavAccordionPages">
+                                <nav class="sb-sidenav-menu-nested nav">
+                                    <a class="nav-link" href="401.html">401 Page</a>
+                                    <a class="nav-link" href="404.html">404 Page</a>
+                                    <a class="nav-link" href="500.html">500 Page</a>
+                                </nav>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="sb-sidenav-menu-heading">Addons</div>
+                    <a class="nav-link" href="charts.html">
+                        <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
+                        Charts
+                    </a>
+                    <a class="nav-link" href="tables.html">
+                        <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
+                        Tables
+                    </a>
+                </div>
+            </div>
+            <div class="sb-sidenav-footer">
+                <div class="small">Logged in as:</div>
+                Start Bootstrap
+            </div>
+        </nav>
+    </div>
+    <div id="layoutSidenav_content">
+        <main>
+            <div class="container mt-4">
+                <h1>测试用例管理</h1>
+
+                <button class="btn btn-primary mb-3" id="addProductBtn">新增用例</button>
+                <!-- 筛选区域 -->
+                <div class="row mb-3">
+                    <div class="col-md-3">
+                        <label class="form-label">项目名称</label>
+                        <select class="form-select" id="filterProduct">
+                            <option value="">请选择项目名称</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">页面</label>
+                        <select class="form-select" id="filterModel" disabled>
+                            <option value="">请选择页面</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">用例名称</label>
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="searchCase" placeholder="请输入用例名称">
+                            <button class="btn btn-primary" id="searchBtn">搜索</button>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <button class="btn btn-secondary d-block" id="resetFilter">重置筛选</button>
+                    </div>
+                </div>
+
+                <table class="table table-bordered">
+                    <thead>
+                    <tr>
+                        <th>用例名称</th>
+                        <th>项目名称</th>
+                        <th>页面</th>
+                        <th>用例内容</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+
+                    <tbody id="caseTableBody">
+                    <!-- 数据将通过 JavaScript 动态加载 -->
+                    </tbody>
+                </table>
+
+                <!-- 分页控件 -->
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <span id="pageInfo" class="text-muted"></span>
+                    </div>
+                    <div class="col-md-6">
+                        <nav aria-label="Page navigation" class="float-end">
+                            <ul class="pagination" id="pagination">
+                                <!-- 分页按钮通过脚本生成 -->
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 模态框 -->
+            <div class="modal fade" id="testCaseModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">新增测试用例</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-3">
+                                <label>用例名称</label>
+                                <input type="text" class="form-control" id="caseName" required>
+                            </div>
+                            <div class="row g-3 mb-3">
+    <div class="col-md-4">
+        <label>项目名称</label>
+        <select class="form-select" id="productSelect">
+            <option value="">请选择项目...</option>
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label>页面名称</label>
+        <select class="form-select" id="modelSelect" disabled>
+            <option value="">请先选择项目...</option>
+        </select>
+    </div>
+    <div class="col-md-4">
+        <label>功能</label>
+        <select class="form-select" id="functionSelect" disabled>
+            <option value="">请先选择页面...</option>
+        </select>
+    </div>
+</div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="border p-2">
+                                        <h6>可选元素列表</h6>
+                                        <div id="elementList" class="list-group"></div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="border p-2">
+                                        <h6>已选元素（按顺序）</h6>
+                                        <div id="selectedElements" class="list-group"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" id="saveCase">保存用例</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        // 当前页码和搜索关键词的变量
+        let currentPage = 1;
+        let currentProduct = "";
+        let currentModel = "";
+        let searchKeyword = "";
+
+        // 初始化产品下拉框
+        $.get("/element_management/check_case_list/", function (data) {
+            $("#filterProduct").empty().append('<option value="">请选择项目名称</option>');
+            data.products.forEach(p => {
+                $("#filterProduct").append(`<option value="${p.product_name}">${p.product_name}</option>`);
+            });
+        });
+
+        // 监听产品选择变化
+        $("#filterProduct").change(function () {
+            const product = $(this).val();
+            currentProduct = product;
+            currentPage = 1; // 重置页码
+
+            $("#filterModel").prop("disabled", true).empty().append('<option value="">请选择页面</option>');
+
+            if (product) {
+                $.get("/element_management/check_case_list/", {
+                    product_name: product
+                }, function (data) {
+                    $("#filterModel").empty().append('<option value="">请选择页面</option>');
+                    // 添加"全部"选项
+                    $("#filterModel").append('<option value="全部">全部</option>');
+
+                    if (data.models && data.models.length > 0) {
+                        data.models.forEach(model => {
+                            $("#filterModel").append(`<option value="${model.model}">${model.model}</option>`);
+                        });
+                        $("#filterModel").prop("disabled", false);
+                    }
+                });
+            }
+        });
+
+        // 监听页面选择变化，加载表格数据
+        $("#filterModel").change(function () {
+            currentModel = $(this).val();
+            currentPage = 1; // 重置页码
+            loadTableData();
+        });
+
+        // 加载表格数据的函数
+function loadTableData() {
+    const product = currentProduct;
+    const model = currentModel;
+
+    if (product && (model === "全部" || model)) {
+        // 显示加载指示器
+        $("#caseTableBody").html('<tr><td colspan="5" class="text-center">加载中...</td></tr>');
+
+        $.get("/element_management/check_case_list/", {
+            product_name: product,
+            model: model,
+            page_number: currentPage
+        }, function (data) {
+            renderTableData(data);
+
+            // 在表格数据渲染完成后，确保筛选条件正确显示
+            $("#filterProduct").val(product);
+
+            if ($("#filterModel").find(`option[value="${model}"]`).length === 0) {
+                // 如果当前模型不在下拉列表中，重新加载模型列表
+                $.get("/element_management/check_case_list/", {
+                    product_name: product
+                }, function (modelData) {
+                    $("#filterModel").empty().append('<option value="">请选择页面</option>');
+                    $("#filterModel").append('<option value="全部">全部</option>');
+
+                    if (modelData.models && modelData.models.length > 0) {
+                        modelData.models.forEach(m => {
+                            $("#filterModel").append(`<option value="${m.model}">${m.model}</option>`);
+                        });
+                        $("#filterModel").prop("disabled", false);
+                        $("#filterModel").val(model);
+                    }
+                });
+            } else {
+                $("#filterModel").val(model);
+            }
+        });
+    }
+}
+
+        // 渲染表格数据和分页
+        function renderTableData(data) {
+    $("#caseTableBody").empty();
+
+    if (data.products && data.products.length > 0) {
+        data.products.forEach(item => {
+            // 确保 elements_list 和 function 字段转义正确，避免 HTML 属性问题
+            const elementsListAttr = item.elements_list ? item.elements_list.replace(/"/g, '&quot;') : '[]';
+            const functionAttr = item.function ? item.function.replace(/"/g, '&quot;') : '';
+
+            $("#caseTableBody").append(`
+            <tr>
+                <td>${item.case_name}</td>
+                <td>${item.product_name}</td>
+                <td>${item.model}</td>
+                <td class="case-content">${item.element_details || ''}</td>
+                <td>
+                    <button class="btn btn-warning btn-sm editProductBtn"
+                        data-id="${item.id}"
+                        data-name="${item.case_name}"
+                        data-product="${item.product_name}"
+                        data-model="${item.model}"
+                        data-elements='${elementsListAttr}'
+                        data-function="${functionAttr}">编辑</button>
+                    <button class="btn btn-danger btn-sm deleteProductBtn"
+                        data-id="${item.id}">删除</button>
+                </td>
+            </tr>
+        `);
+        });
+
+        // 渲染分页控件
+        renderPagination(data.total_pages);
+
+        // 更新页面信息显示
+        $("#pageInfo").text(`当前第 ${currentPage} 页，共 ${data.total_pages} 页`);
+    } else {
+        $("#caseTableBody").append(`
+        <tr>
+            <td colspan="5" class="text-center">没有找到匹配的数据</td>
+        </tr>
+    `);
+        $("#pagination").empty();
+        $("#pageInfo").text("");
+    }
+}
+
+        // 渲染分页控件
+        function renderPagination(totalPages) {
+            $("#pagination").empty();
+
+            if (totalPages <= 1) return;
+
+            // 上一页按钮
+            $("#pagination").append(`
+            <li class="page-item ${currentPage === 1 ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${currentPage - 1}">上一页</a>
+            </li>
+        `);
+
+            // 页码按钮
+            const maxPageButtons = 5; // 最多显示的页码按钮数
+            let startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
+            let endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
+
+            if (endPage - startPage + 1 < maxPageButtons) {
+                startPage = Math.max(1, endPage - maxPageButtons + 1);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                $("#pagination").append(`
+                <li class="page-item ${i === currentPage ? 'active' : ''}">
+                    <a class="page-link" href="#" data-page="${i}">${i}</a>
+                </li>
+            `);
+            }
+
+            // 下一页按钮
+            $("#pagination").append(`
+            <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}">
+                <a class="page-link" href="#" data-page="${currentPage + 1}">下一页</a>
+            </li>
+        `);
+        }
+
+// 在分页按钮点击事件中增加日志
+$(document).on("click", "#pagination .page-link", function (e) {
+    e.preventDefault();
+
+    if ($(this).parent().hasClass('disabled')) return;
+
+    const newPage = parseInt($(this).data("page"));
+    console.log("点击分页按钮，切换到页码:", newPage);
+
+    if (newPage !== currentPage) {
+        currentPage = newPage;
+
+        // 保存当前选中的值，用于在加载新页后恢复
+        const savedProduct = currentProduct;
+        const savedModel = currentModel;
+
+        console.log("保存筛选条件:", {savedProduct, savedModel});
+
+        if (searchKeyword) {
+            searchCases(searchKeyword);
+        } else {
+            loadTableData();
+        }
+    }
+});
+
+// 在loadTableData函数中增加日志
+function loadTableData() {
+    const product = currentProduct;
+    const model = currentModel;
+
+    console.log("加载表格数据，条件:", {product, model, currentPage});
+
+    if (product && (model === "全部" || model)) {
+        // 显示加载指示器
+        $("#caseTableBody").html('<tr><td colspan="5" class="text-center">加载中...</td></tr>');
+
+        $.get("/element_management/check_case_list/", {
+            product_name: product,
+            model: model,
+            page_number: currentPage
+        }, function (data) {
+            console.log("获取到表格数据:", data);
+            renderTableData(data);
+
+            // 设置筛选条件
+            $("#filterProduct").val(product);
+            $("#filterModel").val(model);
+        });
+    }
+}
+
+        // 重置筛选按钮
+        $("#resetFilter").click(function () {
+            $("#filterProduct").val("");
+            $("#filterModel").val("").prop("disabled", true);
+            $("#searchCase").val("");
+            $("#caseTableBody").empty();
+            $("#pagination").empty();
+            $("#pageInfo").text("");
+
+            currentProduct = "";
+            currentModel = "";
+            currentPage = 1;
+            searchKeyword = "";
+        });
+
+        // 初始化产品列表（用于模态框）
+        $.get("/element_management/check_element_list/", function (data) {
+            $("#productSelect").empty().append('<option value="">选择项目...</option>');
+            data.products.forEach(p => {
+                $("#productSelect").append(`<option value="${p.product_name}">${p.product_name}</option>`);
+            });
+        });
+
+        // 监听产品选择框变化
+        $("#productSelect").change(function () {
+            const product = $(this).val();  // 获取选中的产品名称
+            $("#modelSelect").prop("disabled", true).empty().append('<option value="">加载中...</option>');
+
+            if (product) {
+                // 请求后端获取该产品下的所有型号
+                $.get("/element_management/check_element_list/", {product_name: product}, function (data) {
+                    // 清空现有选项，并添加 "请选择型号" 提示
+                    $("#modelSelect").empty().append('<option value="">请选择页面...</option>');
+
+                    // 如果返回了型号列表
+                    if (data.models && data.models.length > 0) {
+                        // 填充型号数据
+                        data.models.forEach(function (item) {
+                            $("#modelSelect").append(`<option value="${item.model}">${item.model}</option>`);
+                        });
+
+                        // 启用型号选择框
+                        $("#modelSelect").prop("disabled", false);
+                    } else {
+                        // 没有找到型号时的提示
+                        alert("没有找到相关的型号");
+                    }
+                });
+            } else {
+                // 如果没有选择产品名称，清空型号选择框
+                $("#modelSelect").prop("disabled", true).empty().append('<option value="">请选择页面...</option>');
+            }
+        });
+
+        // 监听页面选择框变化
+$("#modelSelect").change(function () {
+    const productName = $("#productSelect").val();
+    const model = $(this).val();
+
+    // 重置功能选择框
+    $("#functionSelect").prop("disabled", true).empty().append('<option value="">加载中...</option>');
+
+    if (productName && model) {
+        // 加载功能下拉框数据
+        $.get("/element_management/check_element_list/", {
+            product_name: productName,
+            model: model
+        }, function (data) {
+            $("#elementList").empty();
+            $("#functionSelect").empty().append('<option value="">全部功能</option>');
+
+            // 提取所有不同的功能
+            const functions = new Set();
+            if (data.products && data.products.length > 0) {
+                data.products.forEach(function (item) {
+                    functions.add(item.function);
+                });
+
+                // 填充功能下拉框
+                functions.forEach(function(func) {
+                    $("#functionSelect").append(`<option value="${func}">${func}</option>`);
+                });
+
+                // 启用功能下拉框
+                $("#functionSelect").prop("disabled", false);
+
+                // 显示所有元素
+                data.products.forEach(function (item) {
+                    $("#elementList").append(`
+                    <a href="#" class="list-group-item element-item"
+                       data-id="${item.id}"
+                       data-function="${item.function}">
+                        ${item.function} - ${item.text} - ${item.content_desc}
+                        <small class="text-muted">(${item.remark})</small>
+                    </a>
+                    `);
+                });
+            } else {
+                $("#elementList").append('<div class="alert alert-info">没有匹配的元素</div>');
+            }
+        });
+    }
+});
+
+// 监听功能下拉框变化
+$("#functionSelect").change(function() {
+    const productName = $("#productSelect").val();
+    const model = $("#modelSelect").val();
+    const func = $(this).val();
+
+    if (productName && model) {
+        $("#elementList").empty();
+
+        if (func) {
+            // 如果选择了特定功能
+            $.get("/element_management/check_element_list/", {
+                product_name: productName,
+                model: model,
+                function: func
+            }, function (data) {
+                if (data.products && data.products.length > 0) {
+                    data.products.forEach(function (item) {
+                        $("#elementList").append(`
+                        <a href="#" class="list-group-item element-item"
+                           data-id="${item.id}"
+                           data-function="${item.function}">
+                            ${item.function} - ${item.text} - ${item.content_desc}
+                            <small class="text-muted">(${item.remark})</small>
+                        </a>
+                        `);
+                    });
+                } else {
+                    $("#elementList").append('<div class="alert alert-info">没有匹配的元素</div>');
+                }
+            });
+        } else {
+            // 如果选择了"全部功能"，加载所有元素
+            $.get("/element_management/check_element_list/", {
+                product_name: productName,
+                model: model
+            }, function (data) {
+                if (data.products && data.products.length > 0) {
+                    data.products.forEach(function (item) {
+                        $("#elementList").append(`
+                        <a href="#" class="list-group-item element-item"
+                           data-id="${item.id}"
+                           data-function="${item.function}">
+                            ${item.function} - ${item.text} - ${item.content_desc}
+                            <small class="text-muted">(${item.remark})</small>
+                        </a>
+                        `);
+                    });
+                } else {
+                    $("#elementList").append('<div class="alert alert-info">没有匹配的元素</div>');
+                }
+            });
+        }
+    }
+});
+
+        // 元素点击选择
+        $("#elementList").on("click", ".element-item", function (e) {
+            e.preventDefault();
+            const clone = $(this).clone()
+                .removeClass("element-item")
+                .addClass("selected-item")
+                .append('<span class="float-end text-danger">&times;</span>');
+            $("#selectedElements").append(clone);
+        });
+
+        // 删除已选元素
+        $("#selectedElements").on("click", ".selected-item", function (e) {
+            $(this).remove();
+        });
+
+        // 保存用例
+        $("#saveCase").click(function () {
+            const caseName = $("#caseName").val();
+            const productName = $("#productSelect").val();
+            const model = $("#modelSelect").val();
+            const elements = $("#selectedElements .selected-item").map(function () {
+                return $(this).data("id");
+            }).get();
+            const functions = $("#selectedElements .selected-item").map(function () {
+                return $(this).data("function");
+            }).get().join(","); // 获取所有选中元素的function并用逗号连接
+
+            if (!caseName || elements.length === 0) {
+                alert("请填写用例名称并选择至少一个元素");
+                return;
+            }
+
+            if (!productName || !model) {
+                alert("请选择项目名称和页面");
+                return;
+            }
+
+            // 构建请求数据
+            const requestData = {
+                case_name: caseName,
+                product_name: productName,
+                model: model,
+                function: functions,
+                element_id: elements
+            };
+
+            // 判断是新增还是编辑
+            const isEdit = $("#testCaseModal").data("edit");
+            const url = isEdit
+                ? `/element_management/edit_product/${$("#testCaseModal").data("caseId")}/`
+                : "/element_management/add_test_case/";
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                contentType: "application/json",
+                data: JSON.stringify(requestData),
+                success: (res) => {
+                    if (res.status === "success") {
+                        $("#testCaseModal").modal("hide");
+
+                        // 重新加载数据
+                        if (currentProduct && currentModel) {
+                            loadTableData();
+                        } else if (searchKeyword) {
+                            searchCases(searchKeyword);
+                        }
+                    } else {
+                        alert("保存失败：" + res.message);
+                    }
+                },
+                error: () => alert("请求失败，请检查网络")
+            });
+        });
+
+        // 新增按钮点击事件
+$("#addProductBtn").click(function () {
+    // 重置表单
+    $("#caseName").val("");
+    $("#selectedElements").empty();
+    $("#productSelect").val("");
+    $("#modelSelect").val("").prop("disabled", true);
+    $("#functionSelect").val("").prop("disabled", true); // 新增这一行
+    $("#elementList").empty();
+
+    // 标记当前是新增模式
+    $("#testCaseModal").data("edit", false).removeData("caseId");
+
+    // 修改模态框标题
+    $(".modal-title").text("新增测试用例");
+
+    // 显示模态框
+    $("#testCaseModal").modal("show");
+});
+
+// 修改编辑按钮点击事件处理函数
+$(document).on("click", ".editProductBtn", function () {
+    const caseId = $(this).data("id");
+    const caseName = $(this).data("name");
+    const productName = $(this).data("product");
+    const model = $(this).data("model");
+    const elementsStr = $(this).data("elements");
+    const funcStr = $(this).data("function") || "";
+
+    console.log("编辑按钮数据:", {
+        caseId,
+        caseName,
+        productName,
+        model,
+        elementsStr,
+        funcStr
+    });
+
+    // 解析元素列表
+    let elementIds = [];
+    try {
+        // 如果 elementsStr 已经是数组，就直接使用
+        if (Array.isArray(elementsStr)) {
+            elementIds = elementsStr;
+        } else {
+            // 尝试解析 JSON 字符串
+            elementIds = JSON.parse(elementsStr);
+        }
+    } catch(e) {
+        console.error("解析元素列表失败:", e, elementsStr);
+        // 尝试使用其他方式解析，比如处理字符串 "[53, 54, 55]"
+        if (typeof elementsStr === 'string') {
+            elementIds = elementsStr.replace(/[\[\]]/g, '').split(',').map(id => parseInt(id.trim()));
+        }
+    }
+
+    console.log("解析后的元素ID:", elementIds);
+
+    // 填充模态框基本信息
+    $("#caseName").val(caseName);
+    $("#productSelect").val(productName);
+
+    // 清空已选元素列表
+    $("#selectedElements").empty();
+
+    // 触发产品选择框的change事件，加载页面下拉框
+    $("#productSelect").trigger("change");
+
+    // 使用 setTimeout 等待页面下拉框加载完成
+    setTimeout(() => {
+        // 设置页面值
+        $("#modelSelect").val(model).trigger("change");
+
+        // 等待页面加载功能列表
+        setTimeout(() => {
+            // 设置功能（如果有）
+            if (funcStr) {
+                const functions = funcStr.split(",");
+                if (functions.length > 0 && functions[0]) {
+                    $("#functionSelect").val(functions[0]).trigger("change");
+                }
+            }
+
+            // 等待元素列表加载完成后逐个添加已选元素
+            setTimeout(() => {
+                // 逐个获取并添加元素
+                loadSelectedElements(elementIds);
+            }, 800);
+        }, 500);
+    }, 500);
+
+    // 标记当前是编辑模式
+    $("#testCaseModal").data("edit", true).data("caseId", caseId);
+
+    // 修改模态框标题
+    $(".modal-title").text("编辑测试用例");
+
+    // 显示模态框
+    $("#testCaseModal").modal("show");
+});
+
+// 添加一个新函数用于加载选定的元素
+function loadSelectedElements(elementIds) {
+    console.log("开始加载选定元素:", elementIds);
+
+    if (!elementIds || elementIds.length === 0) {
+        console.log("没有选定的元素");
+        return;
+    }
+
+    // 创建一个Promise数组来存储所有获取元素信息的Promise
+    const promises = elementIds.map(elementId => {
+        return new Promise((resolve) => {
+            $.get(`/element_management/get_element_info/${elementId}/`, function(elementData) {
+                console.log(`获取元素 ${elementId} 信息:`, elementData);
+                if (elementData.status === "success" && elementData.element) {
+                    resolve({
+                        elementId: elementId,
+                        element: elementData.element
+                    });
+                } else {
+                    console.error(`获取元素 ${elementId} 失败:`, elementData);
+                    resolve(null);
+                }
+            }).fail((error) => {
+                console.error(`请求元素 ${elementId} 失败:`, error);
+                resolve(null);
+            });
+        });
+    });
+
+    // 等待所有Promise完成后按顺序添加元素
+    Promise.all(promises).then(results => {
+        // 过滤掉null值并按原顺序添加元素
+        const validResults = results.filter(result => result !== null);
+        console.log("有效的元素结果:", validResults.length);
+
+        validResults.forEach(result => {
+            const element = result.element;
+            $("#selectedElements").append(`
+                <a href="#" class="list-group-item selected-item"
+                   data-id="${element.id}"
+                   data-function="${element.function}">
+                    ${element.function} - ${element.text} - ${element.content_desc}
+                    <small class="text-muted">(${element.remark})</small>
+                    <span class="float-end text-danger">&times;</span>
+                </a>
+            `);
+        });
+    }).catch(error => {
+        console.error("加载选定元素时出错:", error);
+    });
+}
+
+        // 使用事件委托处理删除按钮点击
+        $(document).on("click", ".deleteProductBtn", function () {
+            const caseId = $(this).data("id");
+
+            if (confirm("确定要删除这个测试用例吗？")) {
+                $.ajax({
+                    url: `/element_management/delete_case_list/${caseId}/`,
+                    type: "POST",
+                    headers: {
+                        "X-CSRFToken": getCookie("csrftoken")
+                    },
+                    success: function (response) {
+                        if (response.status === "success") {
+                            // 重新加载表格数据
+                            if (searchKeyword) {
+                                searchCases(searchKeyword);
+                            } else {
+                                loadTableData();
+                            }
+                        } else {
+                            alert("删除失败：" + response.message);
+                        }
+                    },
+                    error: function () {
+                        alert("删除失败，请检查网络连接");
+                    }
+                });
+            }
+        });
+
+        // 添加搜索按钮的点击事件
+        $("#searchBtn").click(function () {
+            searchKeyword = $("#searchCase").val().trim();
+            currentPage = 1; // 重置到第一页
+
+            if (searchKeyword) {
+                searchCases(searchKeyword);
+            } else {
+                // 如果搜索框为空，恢复显示筛选结果
+                if (currentProduct && currentModel) {
+                    loadTableData();
+                } else {
+                    $("#caseTableBody").empty();
+                    $("#pagination").empty();
+                    $("#pageInfo").text("");
+                }
+            }
+        });
+
+        // 添加搜索框的回车事件
+        $("#searchCase").keypress(function (e) {
+            if (e.which === 13) {  // 回车键的 keyCode 是 13
+                $("#searchBtn").click();
+            }
+        });
+
+        // 搜索功能实现
+        function searchCases(keyword) {
+    // 显示加载指示器
+    $("#caseTableBody").html('<tr><td colspan="5" class="text-center">搜索中...</td></tr>');
+
+    $.get("/element_management/search_case/", {
+        search_keyword: keyword,
+        page_number: currentPage
+    }, function (response) {
+        renderTableData(response);
+    }).fail(function () {
+        alert("搜索请求失败，请检查网络连接");
+        $("#caseTableBody").html('<tr><td colspan="5" class="text-center">搜索失败</td></tr>');
+    });
+}
+
+        // 获取CSRF token的函数
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+<script src="/static/js/scripts.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+<script src="/static/assets/demo/chart-area-demo.js"></script>
+<script src="/static/assets/demo/chart-bar-demo.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+        crossorigin="anonymous"></script>
+<script src="/static/js/datatables-simple-demo.js"></script>
+
+</body>
+</html>

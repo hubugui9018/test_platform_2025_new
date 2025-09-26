@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>WebSocket Test Page</h1>
+    <div>
+        <label for="message">Message:</label>
+        <input type="text" id="message" />
+        <button id="sendBtn">Send</button>
+    </div>
+    <div>
+        <h3>Received Messages:</h3>
+        <ul id="messages"></ul>
+    </div>
+
+    <script>
+        const socket = new WebSocket("ws://localhost:8090/ws/test/");
+
+        socket.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            const message = data.message;
+            $("#messages").append(`<li>${message}</li>`);
+        };
+
+        socket.onopen = function() {
+            $("#messages").append("<li>WebSocket connection established222!</li>");
+        };
+
+        socket.onclose = function() {
+            $("#messages").append("<li>WebSocket connection closed!</li>");
+        };
+
+        $("#sendBtn").click(function() {
+            const message = $("#message").val();
+            socket.send(JSON.stringify({ message: message }));
+            console.log(message)
+        });
+    </script>
+</body>
+</html>
