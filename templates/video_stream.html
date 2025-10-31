@@ -324,7 +324,7 @@
 
     // 视频流 WebSocket
     // 确保 WebSocket 连接到 8090 端口
-    const wsProtocol = window.location.protocol === "http:" ? "wss://" : "ws://";
+    const wsProtocol = "ws://";
     const wsHost = window.location.hostname + ":8090";  // WebSocket 服务器在 8090 端口
     // 拼接 URL 时将 unique_id 放到查询参数中
     const videoSocket = new WebSocket(`${wsProtocol}${wsHost}/ws/video_stream/?unique_id=${uniqueId}`);
